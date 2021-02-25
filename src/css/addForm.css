@@ -1,0 +1,43 @@
+.addForm {
+  width: 500px;
+  height: 200px;
+
+  margin: auto;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  border-radius: 10px;
+  background-color: lightgreen;
+}
+
+.addForm > input {
+  margin-top: 20px;
+
+  border: none;
+  outline: none;
+
+  border-radius: 5px;
+
+  font-size: 1.5rem;
+}
+
+.addForm > button {
+  margin-top: 20px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 5px;
+
+  font-size: 1.5rem;
+  background-color: #0ccac4;
+  color: #fff;
+}
+
+.addForm > button:hover {
+  background-color: rgb(184, 181, 181);
+}
