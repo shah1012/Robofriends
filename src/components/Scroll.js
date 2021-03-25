@@ -1,4 +1,5 @@
 import React from "react";
+import "../css/Scroll.css";
 
 function Scroll({ children }) {
   return (

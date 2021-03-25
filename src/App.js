@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import CardList from "./components/CardList";
 import SearchBox from "./components/SearchBox";
 import Scroll from "./components/Scroll";
@@ -6,82 +6,66 @@ import Add from "./components/Add";
 import "./css/App.css";
 import AddForm from "./components/AddForm";
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      robots: [],
-      searchField: "",
-      model: false,
-    };
-  }
-  //runs when App component gets loaded
-  componentDidMount() {
+const App = () => {
+  // state
+  const [robots, setRobots] = useState([]);
+  const [model, setModel] = useState(false);
+  const [searchField, setSearchField] = useState("");
+
+  // useEffect for fetching data
+  useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((res) => res.json())
       .then((users) => {
-        this.setState({ robots: users });
+        setRobots(users);
       });
-  }
+  }, []);
 
-  onSearchChange = (e) => {
-    this.setState({
-      searchField: e.target.value,
-    });
+  // functions
+  const filterRobots = robots.filter((robot) => {
+    return robot.name.toLowerCase().includes(searchField.toLowerCase());
+  });
+
+  const onSearchChange = (e) => {
+    setSearchField(e.target.value);
   };
 
-  addRobot = (e, name, email, clearInputs) => {
-    e.preventDefault();
-    this.setState({
-      robots: [
-        ...this.state.robots,
+  const toggleModel = () => {
+    setModel(!model);
+  };
+
+  const addRobot = (e, name, email, clearInputs) => {
+    if (name !== "" || email !== "") {
+      e.preventDefault();
+      setRobots([
+        ...robots,
         {
-          id: Math.floor(Math.random() * 10) + 1,
+          id: robots.length + 1,
           name: `${name}`,
           username: `${name}`,
           email: `${email}`,
         },
-      ],
-    });
-
-    clearInputs();
+      ]);
+      clearInputs();
+    }
   };
 
-  // Toggle to open/close the Add Model
-  toggleModel = () => {
-    this.setState({
-      model: !this.state.model,
-    });
-  };
+  //rendering
+  return !robots.length ? (
+    <h1>Loading</h1>
+  ) : (
+    <div className="tc">
+      <h1 className="f1">RoboFriends</h1>
+      <SearchBox searchChange={onSearchChange} />
+      <Add toggleFunc={toggleModel} />
 
-  render() {
-    const { robots, searchField, model } = this.state;
+      {/* Adding Robot Form */}
+      <AddForm toggleState={model} addFunc={addRobot} />
 
-    const filterRobots = robots.filter((robot) => {
-      return robot.name
-        .toLocaleLowerCase()
-        .includes(searchField.toLocaleLowerCase());
-    });
-
-    // does a loading thing before all robots are fetched
-
-    return !robots.length ? (
-      <h1>Loading</h1>
-    ) : (
-      <div className="tc">
-        <h1 className="f1">RoboFriends</h1>
-        <SearchBox searchChange={this.onSearchChange} />
-        <Add toggleFunc={this.toggleModel} />
-
-        {/* Adding Robot Form */}
-        <AddForm toggleState={model} addFunc={this.addRobot} />
-
-        <Scroll>
-          <CardList robots={filterRobots} />
-        </Scroll>
-      </div>
-    );
-  }
-}
-
+      <Scroll>
+        <CardList robots={filterRobots} />
+      </Scroll>
+    </div>
+  );
+};
 export default App;

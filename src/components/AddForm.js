@@ -1,54 +1,39 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import "../css/addForm.css";
 
-export class AddForm extends Component {
-  constructor() {
-    super();
-    this.state = {
-      nameValue: "",
-      emailValue: "",
-    };
-  }
+const AddForm = ({ toggleState, addFunc }) => {
+  // state
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
 
-  clearInputs = () => {
-    this.setState({
-      nameValue: "",
-      emailValue: "",
-    });
+  const clearInputs = () => {
+    setEmail("");
+    setName("");
   };
 
-  render() {
-    const { nameValue, emailValue } = this.state;
-    const { toggleState, addFunc } = this.props;
-
-    return toggleState !== false ? (
-      <div>
-        <form action="" className="addForm">
-          <input
-            type="text"
-            required
-            placeholder="Name of Robot"
-            value={nameValue}
-            onChange={(e) => this.setState({ nameValue: e.target.value })}
-          />
-          <input
-            type="email"
-            required
-            placeholder="Email of Robot"
-            value={emailValue}
-            onChange={(e) => this.setState({ emailValue: e.target.value })}
-          />
-          <button
-            onClick={(e) => addFunc(e, nameValue, emailValue, this.clearInputs)}
-          >
-            Add
-          </button>
-        </form>
-      </div>
-    ) : (
-      <div></div>
-    );
-  }
-}
+  return toggleState !== false ? (
+    <form action="" className="addForm">
+      <input
+        type="text"
+        required
+        placeholder="Name of Robot"
+        value={name}
+        className="addInputs"
+        onChange={(e) => setName(e.target.value)}
+      />
+      <input
+        type="email"
+        required
+        placeholder="Email of Robot"
+        value={email}
+        className="addInputs"
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <button onClick={(e) => addFunc(e, name, email, clearInputs)}>Add</button>
+    </form>
+  ) : (
+    <div></div>
+  );
+};
 
 export default AddForm;
